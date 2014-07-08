@@ -53,9 +53,9 @@ static int hp_coefficient2[CLASS_COUNT];
 static int hp_sigma_val[CLASS_COUNT][MAX_LEVEL+1];
 static int sp_coefficient[CLASS_COUNT];
 static int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE];	//[blackhole89]
-static int refinebonus[MAX_REFINE_BONUS][3];	// ¸˜Bƒ{[ƒiƒXƒe[ƒuƒ‹(refine_db.txt)
-int percentrefinery[5][MAX_REFINE+1];	// ¸˜B¬Œ÷—¦(refine_db.txt)
-static int atkmods[3][MAX_WEAPON_TYPE];	// •ŠíATKƒTƒCƒYC³(size_fix.txt)
+static int refinebonus[MAX_REFINE_BONUS][3];	// ï¿½ï¿½ï¿½Bï¿½{ï¿½[ï¿½iï¿½Xï¿½eï¿½[ï¿½uï¿½ï¿½(refine_db.txt)
+int percentrefinery[5][MAX_REFINE+1];	// ï¿½ï¿½ï¿½Bï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(refine_db.txt)
+static int atkmods[3][MAX_WEAPON_TYPE];	// ï¿½ï¿½ï¿½ï¿½ATKï¿½Tï¿½Cï¿½Yï¿½Cï¿½ï¿½(size_fix.txt)
 static char job_bonus[CLASS_COUNT][MAX_LEVEL];
 
 static struct eri *sc_data_ers; //For sc_data entries
@@ -609,7 +609,7 @@ static inline void status_cpy(struct status_data* a, const struct status_data* b
 
 
 /*==========================================
- * ¸˜Bƒ{[ƒiƒX
+ * ï¿½ï¿½ï¿½Bï¿½{ï¿½[ï¿½iï¿½X
  *------------------------------------------*/
 int status_getrefinebonus(int lv,int type)
 {
@@ -814,7 +814,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 		}
 	}
    
-	if( sc && sc->data[SC_KAIZEL] )
+	if( sc && sc->data[SC_KAIZEL]  && !map_flag_gvg(target->m) ) // does not work in woe
 	{ //flag&8 = disable Kaizel
 		int time = skill_get_time2(SL_KAIZEL,sc->data[SC_KAIZEL]->val1);
 		//Look for Osiris Card's bonus effect on the character and revive 100% or revive normally
@@ -1706,7 +1706,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	b_weight = sd->weight;
 	b_max_weight = sd->max_weight;
 
-	pc_calc_skilltree(sd);	// ƒXƒLƒ‹ƒcƒŠ?‚ÌŒvZ
+	pc_calc_skilltree(sd);	// ï¿½Xï¿½Lï¿½ï¿½ï¿½cï¿½ï¿½?ï¿½ÌŒvï¿½Z
 
 	sd->max_weight = max_weight_base[pc_class2idx(sd->status.class_)]+sd->status.str*300;
 
@@ -4156,8 +4156,8 @@ const char* status_get_name(struct block_list *bl)
 }
 
 /*==========================================
- * ‘ÎÛ‚ÌClass‚ğ•Ô‚·(”Ä—p)
- * –ß‚è‚Í®”‚Å0ˆÈã
+ * ï¿½ÎÛ‚ï¿½Classï¿½ï¿½ï¿½Ô‚ï¿½(ï¿½Ä—p)
+ * ï¿½ß‚ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½0ï¿½Èï¿½
  *------------------------------------------*/
 int status_get_class(struct block_list *bl)
 {
@@ -4174,8 +4174,8 @@ int status_get_class(struct block_list *bl)
 	return 0;
 }
 /*==========================================
- * ‘ÎÛ‚ÌƒŒƒxƒ‹‚ğ•Ô‚·(”Ä—p)
- * –ß‚è‚Í®”‚Å0ˆÈã
+ * ï¿½ÎÛ‚Ìƒï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½(ï¿½Ä—p)
+ * ï¿½ß‚ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½0ï¿½Èï¿½
  *------------------------------------------*/
 int status_get_lv(struct block_list *bl)
 {
@@ -5483,7 +5483,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			status_zap(bl, diff, 0);
 		}
 		// fall through
-		case SC_POISON:				/* “Å */
+		case SC_POISON:				/* ï¿½ï¿½ */
 		val3 = tick/1000; //Damage iterations
 		if(val3 < 1) val3 = 1;
 		tick = 1000;
@@ -5555,7 +5555,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			else
 				val4 |= battle_config.monster_cloak_check_type&7;
 			break;
-		case SC_SIGHT:			/* ƒTƒCƒg/ƒ‹ƒAƒt */
+		case SC_SIGHT:			/* ï¿½Tï¿½Cï¿½g/ï¿½ï¿½ï¿½Aï¿½t */
 		case SC_RUWACH:
 		case SC_SIGHTBLASTER:
 			val3 = skill_get_splash(val2, val1); //Val2 should bring the skill-id.
@@ -6370,7 +6370,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	return 1;
 }
 /*==========================================
- * ƒXƒe[ƒ^ƒXˆÙí‘S‰ğœ
+ * ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½Ùï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½
  * type:
  * 0 - ???
  * 1 - ???
@@ -6447,7 +6447,7 @@ int status_change_clear(struct block_list* bl, int type)
 }
 
 /*==========================================
- * ƒXƒe[ƒ^ƒXˆÙíI—¹
+ * ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½Ùï¿½ï¿½Iï¿½ï¿½
  *------------------------------------------*/
 int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const char* file, int line)
 {
@@ -7016,7 +7016,7 @@ int kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 }
 
 /*==========================================
- * ƒXƒe[ƒ^ƒXˆÙíI—¹ƒ^ƒCƒ}[
+ * ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½Ùï¿½ï¿½Iï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[
  *------------------------------------------*/
 int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 {
@@ -7214,7 +7214,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 		}
 		break;
 
-	case SC_DANCING: //ƒ_ƒ“ƒXƒXƒLƒ‹‚ÌŠÔSPÁ”ï
+	case SC_DANCING: //ï¿½_ï¿½ï¿½ï¿½Xï¿½Xï¿½Lï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½SPï¿½ï¿½ï¿½ï¿½
 		{
 			int s = 0;
 			int sp = 1;
@@ -7360,7 +7360,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 }
 
 /*==========================================
- * ƒXƒe[ƒ^ƒXˆÙíƒ^ƒCƒ}[”ÍˆÍˆ—
+ * ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½Ùï¿½ï¿½^ï¿½Cï¿½}ï¿½[ï¿½ÍˆÍï¿½ï¿½ï¿½
  *------------------------------------------*/
 int status_change_timer_sub(struct block_list* bl, va_list ap)
 {
@@ -7378,12 +7378,12 @@ int status_change_timer_sub(struct block_list* bl, va_list ap)
 
 	switch( type )
 	{
-	case SC_SIGHT:	/* ƒTƒCƒg */
+	case SC_SIGHT:	/* ï¿½Tï¿½Cï¿½g */
 	case SC_CONCENTRATE:
 		status_change_end(bl, SC_HIDING, INVALID_TIMER);
 		status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
 		break;
-	case SC_RUWACH:	/* ƒ‹ƒAƒt */
+	case SC_RUWACH:	/* ï¿½ï¿½ï¿½Aï¿½t */
 		if (tsc && (tsc->data[SC_HIDING] || tsc->data[SC_CLOAKING])) {
 			status_change_end(bl, SC_HIDING, INVALID_TIMER);
 			status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
@@ -7830,7 +7830,7 @@ int status_readdb(void)
 }
 
 /*==========================================
- * ƒXƒLƒ‹ŠÖŒW‰Šú‰»ˆ—
+ * ï¿½Xï¿½Lï¿½ï¿½ï¿½ÖŒWï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  *------------------------------------------*/
 int do_init_status(void)
 {
